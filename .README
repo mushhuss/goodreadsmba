@@ -1,0 +1,95 @@
+# Goodreads Dataset Setup
+
+## 1. Download Datasets
+
+Download the following datasets from the [UCSD Goodreads Book Graph](https://cseweb.ucsd.edu/~jmcauley/datasets/goodreads.html).
+
+### Required
+
+- [User–Book Interactions (~4.1 GB)](https://mcauleylab.ucsd.edu/public_datasets/gdrive/goodreads/goodreads_interactions.csv) — Complete dataset of ~228 million interactions, including ratings and reading status.
+- [Book Metadata (~2 GB)](https://mcauleylab.ucsd.edu/public_datasets/gdrive/goodreads/goodreads_books.json.gz) — Metadata for ~2.36 million books.
+- [Book ID Mapping](https://mcauleylab.ucsd.edu/public_datasets/gdrive/goodreads/book_id_map.csv) — Maps interaction book IDs to Goodreads book IDs.
+
+### Additional Metadata
+
+- [Book Works](https://mcauleylab.ucsd.edu/public_datasets/gdrive/goodreads/goodreads_book_works.json.gz) — Groups different editions of the same literary work.
+- [Book Genres](https://mcauleylab.ucsd.edu/public_datasets/gdrive/goodreads/goodreads_book_genres_initial.json.gz) — Genre classifications for books.
+- [Book Series](https://mcauleylab.ucsd.edu/public_datasets/gdrive/goodreads/goodreads_book_series.json.gz) — Information about book series.
+- [User ID Mapping](https://mcauleylab.ucsd.edu/public_datasets/gdrive/goodreads/user_id_map.csv) — Maps numeric user IDs to the dataset's anonymized Goodreads user IDs.
+
+## 2. Directory Structure
+
+Place all downloaded files in `data/`. Keep `.json.gz` files compressed.
+
+```text
+goodreadsmba/
+├── data/
+│   ├── README.md
+│   ├── goodreads_interactions.csv
+│   ├── book_id_map.csv
+│   ├── user_id_map.csv
+│   ├── goodreads_books.json.gz
+│   ├── goodreads_book_works.json.gz
+│   ├── goodreads_book_genres_initial.json.gz
+│   └── goodreads_book_series.json.gz
+└── .gitignore
+```
+
+## 3. Download via Terminal
+
+Run these commands from the repository root.
+
+### macOS / Linux (Bash)
+
+```bash
+mkdir -p data
+BASE="https://mcauleylab.ucsd.edu/public_datasets/gdrive/goodreads"
+
+curl -fL -C - "$BASE/goodreads_interactions.csv" -o data/goodreads_interactions.csv
+curl -fL -C - "$BASE/book_id_map.csv" -o data/book_id_map.csv
+curl -fL -C - "$BASE/user_id_map.csv" -o data/user_id_map.csv
+curl -fL -C - "$BASE/goodreads_books.json.gz" -o data/goodreads_books.json.gz
+curl -fL -C - "$BASE/goodreads_book_works.json.gz" -o data/goodreads_book_works.json.gz
+curl -fL -C - "$BASE/goodreads_book_genres_initial.json.gz" -o data/goodreads_book_genres_initial.json.gz
+curl -fL -C - "$BASE/goodreads_book_series.json.gz" -o data/goodreads_book_series.json.gz
+```
+
+### Windows (PowerShell)
+
+```powershell
+New-Item -ItemType Directory -Force -Path data | Out-Null
+
+$base = "https://mcauleylab.ucsd.edu/public_datasets/gdrive/goodreads"
+
+$files = @(
+    "goodreads_interactions.csv",
+    "book_id_map.csv",
+    "user_id_map.csv",
+    "goodreads_books.json.gz",
+    "goodreads_book_works.json.gz",
+    "goodreads_book_genres_initial.json.gz",
+    "goodreads_book_series.json.gz"
+)
+
+foreach ($file in $files) {
+    Invoke-WebRequest -Uri "$base/$file" -OutFile "data/$file"
+}
+```
+
+**Note:** The complete dataset is several gigabytes. Downloads may take some time depending on your connection.
+
+## 4. Git Configuration
+
+Add the following to the root `.gitignore`:
+
+```gitignore
+# Goodreads raw datasets
+data/*.json.gz
+data/*.csv
+
+# Python artifacts
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+
+The original datasets are provided for academic use and should not be redistributed through the repository.

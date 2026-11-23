@@ -1,0 +1,8 @@
+# Goodreads raw datasets
+data/*.json.gz
+data/*.csv
+
+# Python artifacts
+__pycache__/
+.ipynb_checkpoints/
+.venv/
